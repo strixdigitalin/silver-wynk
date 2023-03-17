@@ -9,10 +9,14 @@ const {
   createBulAnswer,
 } = require("../Controler/AnswerControler");
 const {
+  ApplyCourse,
+  getApplyNoti,
+  approveCourse,
+} = require("../Controler/ApplyCourseControler");
+const {
   createCourse,
   getTeachers,
   getCourseByTeacher,
-  recommendCourse,
 } = require("../Controler/CourseControler");
 const { createQuestion } = require("../Controler/QuestionControler");
 
@@ -31,13 +35,9 @@ const upload = multer({
   },
 });
 
-router.get("/get", getTeachers);
-router.get("/get/:teacher", getCourseByTeacher);
-router.get("/recommend/:userId", recommendCourse);
-router.post("/create", createCourse);
-router.post("/create-bulk", createBulAnswer);
-router.get("/group/:question", getStatistic);
-router.get("/daily/:surveyBy", dailySurvey);
+router.post("/apply", ApplyCourse);
+router.get("/get", getApplyNoti);
+router.post("/approve", approveCourse);
 // router.put(
 //   "/update/:id",
 //   upload.fields([{ name: "avatar", maxCount: 1 }]),

@@ -10,6 +10,9 @@ const userdata = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
     },
+    category: {
+      type: String,
+    },
     course: {
       type: String,
       require: true,
@@ -18,7 +21,6 @@ const userdata = new mongoose.Schema(
     price: {
       type: String,
       require: true,
-      unique: true,
     },
     description: {
       type: String,

@@ -2,6 +2,7 @@ const { default: mongoose } = require("mongoose");
 const Answers = require("../Schema/Answers");
 const Course = require("../Schema/Subject");
 const VotorList = require("../Schema/VotorList");
+const ApplyOnCourse = require("../Schema/ApplyOnCourse");
 
 const createBulAnswer = async (req, res) => {
   const uploadedList = await Course.insertMany(req.body.data, {
@@ -95,7 +96,50 @@ const dailySurvey = async (req, res, next) => {
     res.status(400).send({ success: false, error: e.message });
   }
 };
+const recommendCourse = async (req, res) => {
+  const userId = req.params.userId;
 
+  const data = await ApplyOnCourse.find({
+    user: userId,
+    isApproved: true,
+  }).populate("course");
+  let countBackend = 0;
+  let countFrontend = 0;
+  let countDesign = 0;
+  let countDatabase = 0;
+  let countFullStack = 0;
+  let countDevo = 0;
+  console.log({
+    countBackend,
+    countDatabase,
+    countDesign,
+    data,
+  });
+  data.map((item) => {
+    let { course } = item;
+
+    if (course?.category) {
+      if (course.category == "Backend") countBackend = countBackend + 1;
+      if (course.category == "Frontend") countFrontend = countFrontend + 1;
+      if (course.category == "Designing") countDesign = countDesign + 1;
+      if (course.category == "Fullstack Development")
+        countFullStack = countFullStack + 1;
+      if (course.category == "Database") countDatabase = countDatabase + 1;
+      if (course.category == "Devops") countDevo = countDevo + 1;
+    }
+  });
+  let max = "Backend";
+  if (countBackend < countFrontend) max = "Frontend";
+  if (countFrontend < countDesign) max = "Designing";
+  if (countDesign < countFullStack) max = "Fullstack Development";
+  if (countFullStack < countDatabase) max = "Database";
+  if (countDatabase < countDevo) max = "Devops";
+  if (data.length == 0) {
+    max = "Frontend";
+  }
+  const courses = await Course.find({ category: max }).populate("teacher");
+  res.status(200).send({ success: true, data: courses });
+};
 module.exports = {
   createCourse,
   createBulAnswer,
@@ -103,4 +147,5 @@ module.exports = {
   dailySurvey,
   getTeachers,
   getCourseByTeacher,
+  recommendCourse,
 };
