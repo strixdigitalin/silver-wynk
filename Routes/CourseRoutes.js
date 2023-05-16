@@ -13,6 +13,7 @@ const {
   getTeachers,
   getCourseByTeacher,
   recommendCourse,
+  reCommendedCourseBySelections,
 } = require("../Controler/CourseControler");
 const { createQuestion } = require("../Controler/QuestionControler");
 
@@ -34,6 +35,7 @@ const upload = multer({
 router.get("/get", getTeachers);
 router.get("/get/:teacher", getCourseByTeacher);
 router.get("/recommend/:userId", recommendCourse);
+router.get("/recommend-by-selection/:course", reCommendedCourseBySelections);
 router.post("/create", createCourse);
 router.post("/create-bulk", createBulAnswer);
 router.get("/group/:question", getStatistic);

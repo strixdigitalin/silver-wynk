@@ -25,7 +25,7 @@ const createCourse = async (req, res, next) => {
 };
 
 const getTeachers = async (req, res, next) => {
-  const data = await Course.find(req.query).populate("teacher");
+  const data = await Course.find({}).populate("teacher");
   res.status(200).send({ success: true, message: "ALl USer", data });
 };
 const getCourseByTeacher = async (req, res, next) => {
@@ -137,7 +137,29 @@ const recommendCourse = async (req, res) => {
   if (data.length == 0) {
     max = "Frontend";
   }
-  const courses = await Course.find({ category: max }).populate("teacher");
+  const courses = await Course.find({
+    category: max,
+    suggestions: true,
+  }).populate("teacher");
+
+  res.status(200).send({ success: true, data: courses });
+};
+const reCommendedCourseBySelections = async (req, res) => {
+  const course = req.params.course;
+
+  let nextCourse = "Frontend";
+  if (course == "Backend") nextCourse = "Frontend";
+  if (course == "Frontend") nextCourse = "Backend";
+  if (course == "Designing") nextCourse = "Frontend";
+  if (course == "Fullstack Development") nextCourse = "Devops";
+  if (course == "Database") nextCourse = "Devops";
+  if (course == "Devops") nextCourse = "Devops";
+
+  const courses = await Course.find({
+    category: nextCourse,
+    suggestions: true,
+  }).populate("teacher");
+
   res.status(200).send({ success: true, data: courses });
 };
 module.exports = {
@@ -148,4 +170,5 @@ module.exports = {
   getTeachers,
   getCourseByTeacher,
   recommendCourse,
+  reCommendedCourseBySelections,
 };

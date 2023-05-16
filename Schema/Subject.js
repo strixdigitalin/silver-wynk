@@ -9,6 +9,7 @@ const userdata = new mongoose.Schema(
     teacher: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
+      default: null,
     },
     category: {
       type: String,
@@ -17,6 +18,11 @@ const userdata = new mongoose.Schema(
       type: String,
       require: true,
       unique: true,
+    },
+    link: String,
+    suggestions: {
+      type: Boolean,
+      default: false, // true visible in all course page --- faslse visible in suggestions page only
     },
     price: {
       type: String,
